@@ -27,3 +27,5 @@ hs_err_pid*
 /home-broker/.mvn/wrapper/maven-wrapper.properties
 /home-broker/mvnw
 /home-broker/mvnw.cmd
+home-broker/nbproject/project.properties
+exchange/nbproject/project.properties
