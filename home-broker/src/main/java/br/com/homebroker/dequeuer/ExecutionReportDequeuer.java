@@ -41,10 +41,8 @@ public class ExecutionReportDequeuer {
 		dequeueEsecutionReport();
 	}
 
-	@Async("proccessExecutionReport")
 	public void dequeueEsecutionReport(Map<String, Set<WebSocketSession>> sessionsWithTargetCompIdAndSenderCompId) {
-		this.sessionsWithTargetCompIdAndSenderCompId = sessionsWithTargetCompIdAndSenderCompId;
-		dequeueEsecutionReport();
+		this.sessionsWithTargetCompIdAndSenderCompId = sessionsWithTargetCompIdAndSenderCompId;		
 	}
 
 	private void dequeueEsecutionReport() {
