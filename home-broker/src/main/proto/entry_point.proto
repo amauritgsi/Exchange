@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "br.com.exchange.proto";
+option java_outer_classname = "EntryPoint";
+
+package proto;
+
+enum OrdStatus {
+    NEW = 0;
+    FILLED = 2;
+    CANCELED = 4;
+}
+
+enum Side {
+	SIDE_NULL_VAL = 0;
+    BUY = 1;
+    SELL = 2;
+}
+
+enum ExecType{
+	ET_NEW = 0;
+    ET_PARTIAL_FILL = 1;
+    ET_FILL = 2;
+    ET_CANCELED = 4;
+}
+
+enum OrdType{
+	ORD_TYPE_NULL_VAL = 0;
+    MARKET = 1;
+    LIMIT = 2;
+}
+
+message Identification {
+  string targetCompId = 1;
+  string senderCompId = 2;  
+}
+
+message ExecutionReport {
+  int64 orderID = 1;
+  int64 execID = 2;
+  OrdStatus ordStatus = 3;
+  Side side = 4;
+  string symbol = 5;
+  int64 qty = 6;
+  int64 execQty = 7;
+  double execPrice = 8;
+  ExecType execType = 9;
+  int64 clOrdID = 10;
+  google.protobuf.Timestamp transactTime =11;
+}
+
+message NewOrderSingle {
+  Identification identification = 1;
+  int64 clOrdID = 2;
+  Side side = 3;
+  OrdType ordType = 4;
+  double price = 5;
+  string symbol = 6;
+  int64 orderQty = 7;
+}
+
+message Offer{
+	int64 qty = 1;
+	double price = 2;
+}
+
+message Book{
+	string symbol = 1;
+	Side side = 2;
+	repeated Offer offers = 3;
+}
+
+message SubscribeSymbolRequest{
+	string guid= 1;
+	string symbol = 2;
+}
+
+message MDOpenSessionRequest{
+	string guid= 1;
+}
+
+service EntryPointService {
+  rpc OpenSession (Identification) returns (stream ExecutionReport) {}
+  rpc SubmitOrder (NewOrderSingle) returns (google.protobuf.Empty) {}
+}
+
+service MarketDataService {
+  rpc OpenSession (MDOpenSessionRequest) returns (stream Book) {}
+  rpc SubscribeSymbol (SubscribeSymbolRequest) returns (google.protobuf.Empty) {}
+}
