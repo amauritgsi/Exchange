@@ -79,7 +79,14 @@ public class OrderEntryService {
 			singleOrderDTO.setSide(Side.forNumber(singleOrder.getSide()));
 
 			BigDecimal totalPrice = BigDecimal.ZERO;
-			for (ExecutionReportOrder executionReportOrder : singleOrder.getExecutionReportOrders()) {
+			List<ExecutionReportOrder> list = new ArrayList<>(singleOrder.getExecutionReportOrders());
+			list.sort((ExecutionReportOrder o1, ExecutionReportOrder o2) -> {
+				if (o1.getExecID() == o2.getExecID()) {
+					return 0;
+				}
+				return o1.getExecID() > o2.getExecID() ? 1 : -1;
+			});
+			for (ExecutionReportOrder executionReportOrder : list) {
 				singleOrderDTO.setExecQty(singleOrderDTO.getExecQty() + executionReportOrder.getExecQty());
 				singleOrderDTO.setOrdStatus(OrdStatus.forNumber(executionReportOrder.getOrdStatus()));
 				singleOrderDTO.setLastPx(new BigDecimal(String.valueOf(executionReportOrder.getExecPrice())));
