@@ -190,7 +190,7 @@ public class EntryPointServiceImpl extends EntryPointServiceImplBase {
 
 	private void partialFillOffer(NewOrderSingle request, Offer offer, long currentQty) {
 		if (currentQty < offer.getQty()) {
-			offer.getObserver().onNext(makePartialFill(request.getSymbol(), offer.getQty(), currentQty,
+			offer.getObserver().onNext(makePartialFill(request.getSymbol(), offer.getTotalQty(), currentQty,
 					invertSide(request), offer.getOrderId(), offer.getPrice(), offer.getClOrdID()));
 			offer.setQty(offer.getQty() - currentQty);
 		}
@@ -205,7 +205,7 @@ public class EntryPointServiceImpl extends EntryPointServiceImplBase {
 
 	private void fillOffer(NewOrderSingle request, Offer offer, long currentQty) {
 		if (currentQty >= offer.getQty()) {
-			offer.getObserver().onNext(makeFilled(request.getSymbol(), offer.getQty(), offer.getQty(),
+			offer.getObserver().onNext(makeFilled(request.getSymbol(), offer.getTotalQty(), offer.getQty(),
 					invertSide(request), offer.getOrderId(), offer.getPrice(), offer.getClOrdID()));
 		}
 	}
